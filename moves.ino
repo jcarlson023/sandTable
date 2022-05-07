@@ -8,19 +8,6 @@ void startMove() {
   moveStarted = true;
 }
 
-void buildCurrMove2(float targRot, float targLin, int cmrr, int cmrl) {
-  stepsRot = nextStepsRot;
-  stepsLin = nextStepsLin;
-  setCmrRot(nextPrescalarRot,cmrr);
-  setCmrLin(nextPrescalarLin,cmrl);
-  setDirections(targRot,targLin,currRot,currLin);
-
-  //printCurr();
-
-  currRot = targRot; //nextActPos(targRot,currRot,stepsRot,distPerStepRot);
-  currLin = targLin; //nextActPos(targLin,currLin,stepsLin,distPerStepLin);
-}
-
 void buildCurrMove(float targRot, float targLin) {
   stepsRot = nextStepsRot;
   stepsLin = nextStepsLin;
@@ -30,8 +17,8 @@ void buildCurrMove(float targRot, float targLin) {
   
   //printCurr();
   
-  currRot = targRot; //nextActPos(targRot,currRot,stepsRot,distPerStepRot);
-  currLin = targLin; //nextActPos(targLin,currLin,stepsLin,distPerStepLin);
+  currRot = nextRotAct; //targRot; //nextActPos(targRot,currRot,stepsRot,distPerStepRot);
+  currLin = nextLinAct; //targLin; //nextActPos(targLin,currLin,stepsLin,distPerStepLin);
 }
 
 void buildNextMove(float targRot, float targLin, float velRot, float velLin) {
@@ -44,8 +31,10 @@ void buildNextMove(float targRot, float targLin, float velRot, float velLin) {
   nextPrescalarLin = calcPrescalar(nextUsLin);
   nextCmrRot = calcCmr(nextUsRot,nextPrescalarRot);
   nextCmrLin = calcCmr(nextUsLin,nextPrescalarLin);
+  nextRotAct = nextActPos(targRot,currRot,nextStepsRot,distPerStepRot);
+  nextLinAct = nextActPos(targLin,currLin,nextStepsLin,distPerStepLin);
 
-  //printNext(nextMoveTime,nextUsRot,nextUsLin);
+  //printNext(nextMoveTime,nextUsRot,nextUsLin,targRot,targLin);
 }
 
 long nextNumSteps(float targ, float curr, long stepsPer) {
@@ -117,7 +106,7 @@ void printCurr() {
   Serial.println(" ");
 }
 
-void printNext(long moveTime,long nusRot,long nusLin) {
+void printNext(long moveTime,long nusRot,long nusLin,float targR,float targL) {
   Serial.println("Next parameters:");
   Serial.println("stepsRot: " + String(nextStepsRot));
   Serial.println("stepsLin: " + String(nextStepsLin));
@@ -126,9 +115,13 @@ void printNext(long moveTime,long nusRot,long nusLin) {
   Serial.println("usLin: " + String(nusLin));
   Serial.println("prescalarRot: " + String(nextPrescalarRot));
   Serial.println("prescalarLin: " + String(nextPrescalarLin));
-  //Serial.println("cmrRot: " + String(nextCmrRot));
-  //Serial.println("cmrLin: " + String(nextCmrLin));
+  Serial.println("cmrRot: " + String(nextCmrRot));
+  Serial.println("cmrLin: " + String(nextCmrLin));
   Serial.println("currRot: " + String(currRot));
   Serial.println("currLin: " + String(currLin));
+  Serial.println("targRot: " + String(targR));
+  Serial.println("targLin: " + String(targL));
+  Serial.println("nextRot: " + String(nextRotAct));
+  Serial.println("nextLin: " + String(nextLinAct));
   Serial.println(" ");
 }
