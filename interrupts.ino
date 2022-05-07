@@ -37,14 +37,12 @@ ISR(TIMER0_COMPA_vect){
       }
       if (stepCountRot>=stepsRot){
         moveRot = false;
-        moveStartedRot = false;
       }
     }
   }
 }
 
 ISR(TIMER1_COMPA_vect){
-
   if (moveLin) {
     moveStartedLin = true;
     if (moveStartedRot) {
@@ -59,7 +57,6 @@ ISR(TIMER1_COMPA_vect){
       }
       if (stepCountLin>=stepsLin){
         moveLin = false;
-        moveStartedLin = false;
       }
     }
   }  
@@ -67,27 +64,27 @@ ISR(TIMER1_COMPA_vect){
 
 void setCmrRot(float prescalar, float cmr) {
   //Serial.println("rot prescalar " + String(prescalar));
-  /*
+  
   switch (int(prescalar)) {
     case 1:
-      TCCR0B |= (0 << CS02) | (0 << CS01) | (1 << CS00); // 1 prescaler
+      TCCR0B = TCCR0B & 0b11111000 | 0x01; // 1 prescaler
       break;
     case 8:
-      TCCR0B |= (0 << CS02) | (1 << CS01) | (0 << CS00); // 8 prescaler
+      TCCR0B = TCCR0B & 0b11111000 | 0x02; // 8 prescaler
       break;
     case 64:
-      TCCR0B |= (0 << CS02) | (1 << CS01) | (1 << CS00); // 64 prescaler
+      TCCR0B = TCCR0B & 0b11111000 | 0x03; // 64 prescaler
       break;
     case 256:
-      TCCR0B |= (1 << CS02) | (0 << CS01) | (0 << CS00); // 256 prescaler
+      TCCR0B = TCCR0B & 0b11111000 | 0x04; // 256 prescaler
       break;
     case 1024:
-      TCCR0B |= (1 << CS02) | (0 << CS01) | (1 << CS00); // 1024 prescaler
+      TCCR0B = TCCR0B & 0b11111000 | 0x05; // 1024 prescaler
       break;
     default:
-      TCCR0B |= (1 << CS02) | (0 << CS01) | (1 << CS00); // 1024 prescaler
+      TCCR0B = TCCR0B & 0b11111000 | 0x01; // 1024 prescaler
       break;
-  }*/
+  }
 
   OCR0A = int(cmr);
   
@@ -96,27 +93,27 @@ void setCmrRot(float prescalar, float cmr) {
 void setCmrLin(float prescalar, float cmr) {
 
   //Serial.println("lin prescalar " + String(prescalar));
-  /*
+  
   switch (int(prescalar)) {
     case 1:
-      TCCR1B |= (0 << CS12) | (0 << CS11) | (1 << CS10); // 1 prescaler
+      TCCR1B = TCCR1B & 0b11111000 | 0x01; // 1 prescaler
       break;
     case 8:
-      TCCR1B |= (0 << CS12) | (1 << CS11) | (0 << CS10); // 8 prescaler
+      TCCR1B = TCCR1B & 0b11111000 | 0x02; // 8 prescaler
       break;
     case 64:
-      TCCR1B |= (0 << CS12) | (1 << CS11) | (1 << CS10); // 64 prescaler
+      TCCR1B = TCCR1B & 0b11111000 | 0x03; // 64 prescaler
       break;
     case 256:
-      TCCR1B |= (1 << CS12) | (0 << CS11) | (0 << CS10); // 256 prescaler
+      TCCR1B = TCCR1B & 0b11111000 | 0x04; // 256 prescaler
       break;
     case 1024:
-      TCCR1B |= (1 << CS12) | (0 << CS11) | (1 << CS10); // 1024 prescaler
+      TCCR1B = TCCR1B & 0b11111000 | 0x05; // 1024 prescaler
       break;
     default:
-      TCCR1B |= (1 << CS12) | (0 << CS11) | (1 << CS10); // 1024 prescaler
+      TCCR1B = TCCR1B & 0b11111000 | 0x01; // 1024 prescaler
       break;
-  }*/
+  }
   
   OCR1A = int(cmr); 
 }
