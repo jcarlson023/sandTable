@@ -17,6 +17,8 @@ long stepCountLin;
 bool moveRot = false;
 bool moveLin = false;
 bool moveStarted = false;
+bool moveStartedRot = true;
+bool moveStartedLin = true;
 float currRot;
 float currLin;
 
@@ -31,19 +33,20 @@ bool stepPulseRot = true;
 bool stepPulseLin = true;
 
 // Motion parameters
-float microStep = 16.0;
-float pulleyTeeth = 126.0;
-float motorTeeth = 20.0;
+long microStep = 16;
+long pulleyTeeth = 126;
+long motorTeeth = 20;
 float pulleyRatio = pulleyTeeth / motorTeeth;
-float stepsPerRev = 200.0 * pulleyRatio * microStep;
-float stepsPerDeg = stepsPerRev / 360.0;
+long stepsPerRev = 200 * pulleyRatio * microStep;
+long stepsPerDeg = stepsPerRev / 360;
 float stepsPerMM = 5.0 * microStep;
 float distPerStepRot = 1.0 / stepsPerDeg;
 float distPerStepLin = 1.0 / stepsPerMM;
 
 // Pin Defs
-int dirPin1 = 4;
-int stepPin1 = 3;
-int dirPin2 = 2;
-int stepPin2 = 9;
-int enablePin1 = 8;
+
+int dirPin1 = 4; // port PC6 PORTD
+int stepPin1 = 3; // port PF5 PORTD
+int dirPin2 = 2; // port PA0 PORTD
+int stepPin2 = 9; // port PB0 PORTB
+int enablePin1 = 8; // port PE3 PORTB

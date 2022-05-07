@@ -24,47 +24,50 @@ void buildInterrupts() {
 
 ISR(TIMER0_COMPA_vect){
   if (moveRot){
-    //moveStartedRot = true;
-    //if (moveStartedLin) {
+    moveStartedRot = true;
+    if (moveStartedLin) {
       if (stepPulseRot) {
-        digitalWrite(stepPin1, HIGH);
+        PORTD = PORTD | 0x08; // set high, pin 3
         stepPulseRot = false;
       }
       else {
-        digitalWrite(stepPin1, LOW);
+        PORTD = PORTD & 0xF7; // set low, pin 3
         stepPulseRot = true;
         stepCountRot = stepCountRot + 1;
       }
-      if (stepCountRot==int(stepsRot)){
+      if (stepCountRot>=stepsRot){
         moveRot = false;
+        moveStartedRot = false;
       }
-    //}
+    }
   }
 }
 
 ISR(TIMER1_COMPA_vect){
 
   if (moveLin) {
-    //moveStartedLin = true;
-    //if (moveStartedRot) {
+    moveStartedLin = true;
+    if (moveStartedRot) {
       if (stepPulseLin) {
-        digitalWrite(stepPin2, HIGH);
+        PORTB = PORTB | 0x02; // set high, pin 8
         stepPulseLin = false;
       }
       else {
-        digitalWrite(stepPin2, LOW);
+        PORTB = PORTB & 0xFD; // set low, pin 8
         stepPulseLin = true;
         stepCountLin = stepCountLin + 1;
       }
-      if (stepCountLin==int(stepsLin)){
+      if (stepCountLin>=stepsLin){
         moveLin = false;
+        moveStartedLin = false;
       }
-    //}
+    }
   }  
 }
 
 void setCmrRot(float prescalar, float cmr) {
   //Serial.println("rot prescalar " + String(prescalar));
+  /*
   switch (int(prescalar)) {
     case 1:
       TCCR0B |= (0 << CS02) | (0 << CS01) | (1 << CS00); // 1 prescaler
@@ -84,7 +87,7 @@ void setCmrRot(float prescalar, float cmr) {
     default:
       TCCR0B |= (1 << CS02) | (0 << CS01) | (1 << CS00); // 1024 prescaler
       break;
-  }
+  }*/
 
   OCR0A = int(cmr);
   
@@ -93,6 +96,7 @@ void setCmrRot(float prescalar, float cmr) {
 void setCmrLin(float prescalar, float cmr) {
 
   //Serial.println("lin prescalar " + String(prescalar));
+  /*
   switch (int(prescalar)) {
     case 1:
       TCCR1B |= (0 << CS12) | (0 << CS11) | (1 << CS10); // 1 prescaler
@@ -112,7 +116,7 @@ void setCmrLin(float prescalar, float cmr) {
     default:
       TCCR1B |= (1 << CS12) | (0 << CS11) | (1 << CS10); // 1024 prescaler
       break;
-  }
+  }*/
   
   OCR1A = int(cmr); 
 }
