@@ -19,8 +19,6 @@ bool moveLin = false;
 bool moveStarted = false;
 bool moveStartedRot = true;
 bool moveStartedLin = true;
-float currRot = 0.0;
-float currLin = 160.0;
 
 // Timing variables
 // compare match register = [16,000,000 / (prescaler * time delay) ] -1
@@ -39,7 +37,7 @@ long motorTeeth = 20;
 float pulleyRatio = pulleyTeeth / motorTeeth;
 long stepsPerRev = 200 * pulleyRatio * microStep;
 long stepsPerDeg = stepsPerRev / 360;
-float stepsPerMM = 5.0 * microStep;
+float stepsPerMM = (5.0 * microStep)/2;
 float distPerStepRot = 1.0 / stepsPerDeg;
 float distPerStepLin = 1.0 / stepsPerMM;
 

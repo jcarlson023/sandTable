@@ -1,36 +1,17 @@
 
 #include "inits.h"
 #include <SD.h>
+
+int fileLength = 449;
+float currRot = 0.0;
+//float currLin = 0.0;
+float currLin = 160.0;
  
 File myFile;
-
-// put in math to dynamically change the clock counters?
-float spd = 40;
-float path[22][4] = {{5, 10, 4, spd},
-                    {10, 20, 4, spd},
-                    {15, 30, 4, spd},
-                    {20, 40, 4, spd},
-                    {25, 50, 4, spd},
-                    {30, 60, 4, spd},
-                    {35, 70, 4, spd},
-                    {40, 80, 4, spd},
-                    {45, 90, 4, spd},
-                    {50, 100, 4,spd},
-                    {55, 110, 4, spd},
-                    {50, 100, 4, spd},
-                    {45, 90, 4, spd},
-                    {40, 80, 4, spd},
-                    {35, 70, 4, spd},
-                    {30, 60, 4, spd},
-                    {25, 50, 4, spd},
-                    {20, 40, 4, spd},
-                    {15, 30, 4, spd},
-                    {10, 20, 4, spd},
-                    {5, 10, 4, spd},
-                    {0, 0, 4, spd}};
                   
 void setup() {
   Serial.begin(9600);
+  Serial.setTimeout(1000);
 
   Serial.print("Initializing SD card...");
   pinMode(10, OUTPUT); //sdCard
@@ -39,7 +20,7 @@ void setup() {
     return;
   }
   Serial.println("initialization done.");
-  myFile = SD.open("path.csv");
+  //myFile = SD.open("path.csv");
 
   buildInterrupts();
 
@@ -56,32 +37,31 @@ void setup() {
 
 void loop() {
   
-  myFile = SD.open("path.csv");
+  myFile = SD.open("spirals2.csv");
   
   float moveTimeNext = 0;
   float lTargNext = 0;
   float rTargNext = 0;
   float lVelNext = 0;
   float rVelNext = 0;
-  int i = -1;
   
-  while (myFile.available()) {
+  for (int i=-1; i<fileLength-2; i++) {
     if (i >= 0) {
       buildCurrMove(rTargNext,lTargNext);
       startMove();
     }
-    moveTimeNext = (myFile.readStringUntil(',')).toFloat();
-    lTargNext = (myFile.readStringUntil(',')).toFloat()*1000;
-    rTargNext = (myFile.readStringUntil(',')).toFloat();
-    lVelNext = ((myFile.readStringUntil(',')).toFloat()*1000);
-    rVelNext = ((myFile.readStringUntil('\n')).toFloat());
+    if (myFile.available()) {moveTimeNext = (myFile.readStringUntil(',')).toFloat();} else {break;}
+    if (myFile.available()) {lTargNext = (myFile.readStringUntil(',')).toFloat()*1000;} else {break;}
+    if (myFile.available()) {rTargNext = (myFile.readStringUntil(',')).toFloat();} else {break;}
+    if (myFile.available()) {lVelNext = ((myFile.readStringUntil(',')).toFloat()*1000);} else {break;}
+    if (myFile.available()) {rVelNext = ((myFile.readStringUntil('\n')).toFloat());} else {break;}
     //Serial.print(String(moveTimeNext) + ", ");
     //Serial.print(String(lTargNext) + ", ");
     //Serial.print(String(rTargNext) + ", ");
     //Serial.print(String(abs(lVelNext)) + ", ");
     //Serial.println(String(abs(rVelNext)));
     buildNextMove(rTargNext,lTargNext,abs(rVelNext),abs(lVelNext));
-    if (i >= 0) {
+    if (i >= 0) { 
       while (moveStarted) {
         Serial.print("");
         if (!moveRot && !moveLin) {
@@ -91,7 +71,6 @@ void loop() {
         }
       }
     }
-    i = i + 1;
   }
 
   myFile.close();
