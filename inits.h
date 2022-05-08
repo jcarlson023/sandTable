@@ -20,7 +20,7 @@ bool moveStarted = false;
 bool moveStartedRot = true;
 bool moveStartedLin = true;
 float currRot = 0.0;
-float currLin = 0.0;
+float currLin = 160.0;
 
 // Timing variables
 // compare match register = [16,000,000 / (prescaler * time delay) ] -1

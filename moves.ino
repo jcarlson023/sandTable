@@ -11,6 +11,7 @@ void startMove() {
 void buildCurrMove(float targRot, float targLin) {
   stepsRot = nextStepsRot;
   stepsLin = nextStepsLin;
+  //Serial.println(String(nextPrescalarRot) + ", " + String(nextCmrRot));
   setCmrRot(nextPrescalarRot,nextCmrRot);
   setCmrLin(nextPrescalarLin,nextCmrLin);
   setDirections(targRot,targLin,currRot,currLin);

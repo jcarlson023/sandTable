@@ -1,9 +1,11 @@
 
 #include "inits.h"
-#include "path.h"
+#include <SD.h>
+ 
+File myFile;
 
 // put in math to dynamically change the clock counters?
-int spd = 40;
+float spd = 40;
 float path[22][4] = {{5, 10, 4, spd},
                     {10, 20, 4, spd},
                     {15, 30, 4, spd},
@@ -28,6 +30,16 @@ float path[22][4] = {{5, 10, 4, spd},
                     {0, 0, 4, spd}};
                   
 void setup() {
+  Serial.begin(9600);
+
+  Serial.print("Initializing SD card...");
+  pinMode(10, OUTPUT); //sdCard
+  if (!SD.begin(10)) {
+    Serial.println("initialization failed!");
+    return;
+  }
+  Serial.println("initialization done.");
+  myFile = SD.open("path.csv");
 
   buildInterrupts();
 
@@ -40,22 +52,35 @@ void setup() {
   pinMode(dirPin2, OUTPUT);
   pinMode(enablePin1, OUTPUT);
   digitalWrite(enablePin1, HIGH);
-
-  Serial.begin(9600);
 }
 
 void loop() {
-
-  for (int i = -1; i < 22; i++) {
+  
+  myFile = SD.open("path.csv");
+  
+  float moveTimeNext = 0;
+  float lTargNext = 0;
+  float rTargNext = 0;
+  float lVelNext = 0;
+  float rVelNext = 0;
+  int i = -1;
+  
+  while (myFile.available()) {
     if (i >= 0) {
-      buildCurrMove(path[i][0],path[i][1]);
-      //buildCurrMove(coolPath[i][2],coolPath[i][1]);
+      buildCurrMove(rTargNext,lTargNext);
       startMove();
     }
-    if (i != 21) {
-      buildNextMove(path[i+1][0],path[i+1][1],path[i+1][2],path[i+1][3]);
-      //buildNextMove(coolPath[i+1][2],coolPath[i+1][1],coolPath[i+1][4],coolPath[i+1][3]);
-    }
+    moveTimeNext = (myFile.readStringUntil(',')).toFloat();
+    lTargNext = (myFile.readStringUntil(',')).toFloat()*1000;
+    rTargNext = (myFile.readStringUntil(',')).toFloat();
+    lVelNext = ((myFile.readStringUntil(',')).toFloat()*1000);
+    rVelNext = ((myFile.readStringUntil('\n')).toFloat());
+    //Serial.print(String(moveTimeNext) + ", ");
+    //Serial.print(String(lTargNext) + ", ");
+    //Serial.print(String(rTargNext) + ", ");
+    //Serial.print(String(abs(lVelNext)) + ", ");
+    //Serial.println(String(abs(rVelNext)));
+    buildNextMove(rTargNext,lTargNext,abs(rVelNext),abs(lVelNext));
     if (i >= 0) {
       while (moveStarted) {
         Serial.print("");
@@ -66,5 +91,8 @@ void loop() {
         }
       }
     }
+    i = i + 1;
   }
+
+  myFile.close();
 }
