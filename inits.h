@@ -17,7 +17,13 @@ long nextPrescalarRot;
 long nextPrescalarLin;
 bool moveStartedRot;
 bool moveStartedLin;
+float moveTimeNext = 0;
+float lTargNext = 0;
+float rTargNext = 0;
+float lVelNext = 0;
+float rVelNext = 0;
 bool zeroDist = false;
+bool builtNextMove = false;
 
 // curr move planning
 long stepsRot;

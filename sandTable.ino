@@ -2,15 +2,8 @@
 #include "inits.h"
 #include <SD.h>
 
-float moveTimeNext = 0;
-float lTargNext = 0;
-float rTargNext = 0;
-float lVelNext = 0;
-float rVelNext = 0;
-bool builtNextMove = false;
-
+bool runPath = true;
 int path = 3;
-
 int i = -1;
  
 File myFile;
@@ -64,46 +57,48 @@ void setup() {
 }
 
 void loop() {
-  
-  if (i==-1) {
-    myFile = SD.open(fileName);
-    
-    moveTimeNext = 0;
-    lTargNext = 0;
-    rTargNext = 0;
-    lVelNext = 0;
-    rVelNext = 0;
-  }
-  
-  if ((i >= 0) && !moveRot && !moveLin) {
-    cli();//stop interrupts
-    buildCurrMove(rTargNext,lTargNext);
-    if (!zeroDist) {
-      startMove();
-    }
-    builtNextMove = false;
-    sei();//allow interrupts
-  }
 
-  if (!builtNextMove || zeroDist) {
-    String nextTime = (myFile.readStringUntil(','));
-    nextStepsLin = (myFile.readStringUntil(',')).toFloat();
-    nextStepsRot = (myFile.readStringUntil(',')).toFloat();
-    nextPrescalarLin = (myFile.readStringUntil(',')).toFloat();
-    nextPrescalarRot = (myFile.readStringUntil(',')).toFloat();
-    nextCmrLin = (myFile.readStringUntil(',')).toFloat();
-    nextCmrRot = (myFile.readStringUntil(',')).toFloat();
-    nextCmrLinAcc = (myFile.readStringUntil(',')).toFloat();
-    nextCmrRotAcc = (myFile.readStringUntil('\n')).toFloat();
-    builtNextMove = true;
-    i++;
-    printFileReads();
-  }
+  if (runPath) {
+    if (i==-1) {
+      myFile = SD.open(fileName);
+      
+      moveTimeNext = 0;
+      lTargNext = 0;
+      rTargNext = 0;
+      lVelNext = 0;
+      rVelNext = 0;
+    }
+    
+    if ((i >= 0) && !moveRot && !moveLin) {
+      cli();//stop interrupts
+      buildCurrMove(rTargNext,lTargNext);
+      if (!zeroDist) {
+        startMove();
+      }
+      builtNextMove = false;
+      sei();//allow interrupts
+    }
   
-  if (i==(fileLength-2)) {
-    myFile.close();
-    i = -1;
-    builtNextMove = false;
+    if (!builtNextMove || zeroDist) {
+      String nextTime = (myFile.readStringUntil(','));
+      nextStepsLin = (myFile.readStringUntil(',')).toFloat();
+      nextStepsRot = (myFile.readStringUntil(',')).toFloat();
+      nextPrescalarLin = (myFile.readStringUntil(',')).toFloat();
+      nextPrescalarRot = (myFile.readStringUntil(',')).toFloat();
+      nextCmrLin = (myFile.readStringUntil(',')).toFloat();
+      nextCmrRot = (myFile.readStringUntil(',')).toFloat();
+      nextCmrLinAcc = (myFile.readStringUntil(',')).toFloat();
+      nextCmrRotAcc = (myFile.readStringUntil('\n')).toFloat();
+      builtNextMove = true;
+      i++;
+      //printFileReads();
+    }
+    
+    if (i==(fileLength-2)) {
+      myFile.close();
+      i = -1;
+      builtNextMove = false;
+    }
   }
   
 }
