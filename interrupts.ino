@@ -34,6 +34,14 @@ ISR(TIMER0_COMPA_vect){
         PORTD = PORTD & 0xF7; // set low, pin 3
         stepPulseRot = true;
         stepCountRot = stepCountRot + 1;
+        cmrRot = cmrRot + cmrRotAcc*((cmrRot*prescalarRot)/clockHz);
+        if (cmrRot>255) { 
+          cmrRot = 255;
+        }
+        if (cmrRot<10) { 
+          cmrRot = 10;
+        }
+        OCR0A = int(cmrRot);
       }
       if (stepCountRot>=stepsRot){
         moveRot = false;
@@ -54,6 +62,14 @@ ISR(TIMER1_COMPA_vect){
         PORTB = PORTB & 0xFD; // set low, pin 8
         stepPulseLin = true;
         stepCountLin = stepCountLin + 1;
+        cmrLin = cmrLin + cmrLinAcc*((cmrLin*prescalarLin)/clockHz);
+        if (cmrLin>255) {
+          cmrLin=255;
+        }
+        if (cmrLin<10) {
+          cmrLin=10;
+        }
+        OCR1A = int(cmrLin);
       }
       if (stepCountLin>=stepsLin){
         moveLin = false;

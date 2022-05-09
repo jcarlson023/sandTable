@@ -53,7 +53,7 @@ void setup() {
       currRot = 0.0;
       break;
     case 3:
-      fileName = "newPath.csv";
+      fileName = "refactor.csv";
       fileLength = 1068;
       currLin = 0;
       currRot = 0.0;
@@ -86,12 +86,15 @@ void loop() {
   }
 
   if (!builtNextMove || zeroDist) {
+    String nextTime = (myFile.readStringUntil(','));
     nextStepsLin = (myFile.readStringUntil(',')).toFloat();
     nextStepsRot = (myFile.readStringUntil(',')).toFloat();
     nextPrescalarLin = (myFile.readStringUntil(',')).toFloat();
     nextPrescalarRot = (myFile.readStringUntil(',')).toFloat();
     nextCmrLin = (myFile.readStringUntil(',')).toFloat();
-    nextCmrRot = (myFile.readStringUntil('\n')).toFloat();
+    nextCmrRot = (myFile.readStringUntil(',')).toFloat();
+    nextCmrLinAcc = (myFile.readStringUntil(',')).toFloat();
+    nextCmrRotAcc = (myFile.readStringUntil('\n')).toFloat();
     builtNextMove = true;
     i++;
     printFileReads();

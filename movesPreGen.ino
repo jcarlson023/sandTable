@@ -3,23 +3,40 @@
 void startMove() {
   stepCountRot = 0;
   stepCountLin = 0;
-  moveRot = true;
-  moveLin = true;
-  moveStartedRot = false;
-  moveStartedLin = false;
+  if (abs(nextStepsRot)>0){
+    moveRot = true;
+    moveStartedRot = false;
+  }
+  if (abs(nextStepsLin)>0){
+    moveLin = true;
+    moveStartedLin = false;
+  }
+  
 }
 
 void buildCurrMove(float targRot, float targLin) {
-  stepsRot = abs(nextStepsRot);
-  stepsLin = abs(nextStepsLin);
-  setCmrRot(nextPrescalarRot,nextCmrRot);
-  setCmrLin(nextPrescalarLin,nextCmrLin);
-  setDirections(nextStepsRot,nextStepsLin);
+
+  if (abs(nextStepsRot)>0){
+    stepsRot = abs(nextStepsRot);
+    prescalarRot = nextPrescalarRot;
+    cmrRot = nextCmrRot;
+    setCmrRot(nextPrescalarRot,nextCmrRot);
+    cmrRotAcc = nextCmrRotAcc;
+    currRot = nextActPos(currRot,nextStepsRot,stepsPerDeg);
+  }
   
+  if (abs(nextStepsLin)>0){
+    stepsLin = abs(nextStepsLin);
+    prescalarLin = nextPrescalarLin;
+    cmrLin = nextCmrLin;
+    setCmrLin(nextPrescalarLin,nextCmrLin);
+    cmrLinAcc = nextCmrLinAcc;
+    currLin = nextActPos(currLin,nextStepsLin,stepsPerMM);
+  }
+  
+  setDirections(nextStepsRot,nextStepsLin);
   //printCurr();
   
-  currRot = nextActPos(currRot,nextStepsRot,stepsPerDeg);
-  currLin = nextActPos(currLin,nextStepsLin,stepsPerMM);
 }
 
 float nextActPos(float curr, long numSteps, float distPerStep) {
