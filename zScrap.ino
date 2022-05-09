@@ -1,4 +1,4 @@
-
+/**
 #include "inits.h"
 #include <SD.h>
 
@@ -53,7 +53,7 @@ void setup() {
       currRot = 0.0;
       break;
     case 3:
-      fileName = "newPath.csv";
+      fileName = "slowPath.csv";
       fileLength = 1068;
       currLin = 0;
       currRot = 0.0;
@@ -86,16 +86,18 @@ void loop() {
   }
 
   if (!builtNextMove || zeroDist) {
-    nextStepsLin = (myFile.readStringUntil(',')).toFloat();
-    nextStepsRot = (myFile.readStringUntil(',')).toFloat();
-    nextPrescalarLin = (myFile.readStringUntil(',')).toFloat();
-    nextPrescalarRot = (myFile.readStringUntil(',')).toFloat();
-    nextCmrLin = (myFile.readStringUntil(',')).toFloat();
-    nextCmrRot = (myFile.readStringUntil('\n')).toFloat();
+    moveTimeNext = (myFile.readStringUntil(',')).toFloat();
+    lTargNext = (myFile.readStringUntil(',')).toFloat()*1000;
+    rTargNext = (myFile.readStringUntil(',')).toFloat();
+    lVelNext = ((myFile.readStringUntil(',')).toFloat()*1000);
+    rVelNext = ((myFile.readStringUntil('\n')).toFloat());
+    buildNextMove(rTargNext,lTargNext,abs(rVelNext),abs(lVelNext));
     builtNextMove = true;
     i++;
-    printFileReads();
+    //printFileReads();
   }
+  
+
   
   if (i==(fileLength-2)) {
     myFile.close();
@@ -106,10 +108,10 @@ void loop() {
 }
 
 void printFileReads() {
-  Serial.print(String(nextStepsLin) + ", ");
-  Serial.print(String(nextStepsRot) + ", ");
-  Serial.print(String(nextPrescalarLin) + ", ");
-  Serial.print(String(nextPrescalarRot) + ", ");
-  Serial.print(String(nextCmrLin) + ", ");
-  Serial.println(String(nextCmrRot));
+  Serial.print(String(moveTimeNext) + ", ");
+  Serial.print(String(lTargNext) + ", ");
+  Serial.print(String(rTargNext) + ", ");
+  Serial.print(String(abs(lVelNext)) + ", ");
+  Serial.println(String(abs(rVelNext)));
 }
+**/

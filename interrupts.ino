@@ -63,7 +63,6 @@ ISR(TIMER1_COMPA_vect){
 }
 
 void setCmrRot(float prescalar, float cmr) {
-  //Serial.println("rot prescalar " + String(prescalar));
   
   switch (int(prescalar)) {
     case 1:
@@ -91,8 +90,6 @@ void setCmrRot(float prescalar, float cmr) {
 }
 
 void setCmrLin(float prescalar, float cmr) {
-
-  //Serial.println("lin prescalar " + String(prescalar));
   
   switch (int(prescalar)) {
     case 1:

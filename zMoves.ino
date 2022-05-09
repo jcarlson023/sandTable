@@ -1,11 +1,12 @@
 // add handler for when one motor doesn't move
-
+/***
 void startMove() {
   stepCountRot = 0;
   stepCountLin = 0;
   moveRot = true;
   moveLin = true;
-  moveStarted = true;
+  moveStartedRot = false;
+  moveStartedLin = false;
 }
 
 void buildCurrMove(float targRot, float targLin) {
@@ -25,7 +26,13 @@ void buildCurrMove(float targRot, float targLin) {
 void buildNextMove(float targRot, float targLin, float velRot, float velLin) {
   nextStepsRot = nextNumSteps(targRot,currRot,stepsPerDeg);
   nextStepsLin = nextNumSteps(targLin,currLin,stepsPerMM);
+  if (nextStepsRot<30 || nextStepsLin<30) {
+    zeroDist = true;
+  } else {zeroDist = false;}
   long nextMoveTime = calcMoveTime(targRot,targLin,currRot,currLin,velRot,velLin);
+  if (nextMoveTime < 200000) {
+    nextMoveTime = 200000;
+  }
   long nextUsRot = round(abs((nextMoveTime / nextStepsRot) / 2));
   long nextUsLin = round(abs((nextMoveTime / nextStepsLin) / 2));
   nextPrescalarRot = calcPrescalar(nextUsRot);
@@ -35,7 +42,7 @@ void buildNextMove(float targRot, float targLin, float velRot, float velLin) {
   nextRotAct = nextActPos(targRot,currRot,nextStepsRot,distPerStepRot);
   nextLinAct = nextActPos(targLin,currLin,nextStepsLin,distPerStepLin);
 
-  //printNext(nextMoveTime,nextUsRot,nextUsLin,targRot,targLin);
+  //printNextLine(nextMoveTime,nextUsRot,nextUsLin,targRot,targLin);
 }
 
 long nextNumSteps(float targ, float curr, long stepsPer) {
@@ -68,6 +75,9 @@ void setDirections(float targRot, float targLin, float currRot, float currLin) {
 long calcMoveTime(float targRot, float targLin, float currRot, float currLin, float velRot, float velLin){
   float deltRot = targRot - currRot;
   float deltLin = targLin - currLin;
+  if (velLin<1) {
+    velLin = 1;
+  }
   long moveTimeUs = round((abs(deltLin)/velLin) * microS);
   return moveTimeUs;
 }
@@ -126,3 +136,23 @@ void printNext(long moveTime,long nusRot,long nusLin,float targR,float targL) {
   Serial.println("nextLin: " + String(nextLinAct));
   Serial.println(" ");
 }
+
+void printNextLine(long moveTime,long nusRot,long nusLin,float targR,float targL) {
+  Serial.print(String(nextStepsRot)+",");
+  Serial.print(String(nextStepsLin)+",");
+  Serial.print(String(moveTime)+",");
+  Serial.print(String(nusRot)+",");
+  Serial.print(String(nusLin)+",");
+  Serial.print(String(nextPrescalarRot)+",");
+  Serial.print(String(nextPrescalarLin)+",");
+  Serial.print(String(nextCmrRot)+",");
+  Serial.print(String(nextCmrLin)+",");
+  Serial.print(String(currRot)+",");
+  Serial.print(String(currLin)+",");
+  Serial.print(String(targR)+",");
+  Serial.print(String(targL)+",");
+  Serial.print(String(nextRotAct)+",");
+  Serial.println(String(nextLinAct));
+}
+
+**/
