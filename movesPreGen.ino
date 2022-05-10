@@ -8,7 +8,7 @@ void buildCurrMove(float targRot, float targLin) {
     prescalarRot = nextPrescalarRot;
     cmrRot = nextCmrRot;
     cmrRotAcc = nextCmrRotAcc;
-    currRot = nextActPos(currRot,nextStepsRot,stepsPerDeg);
+    currRot = nextRotAct;
   }
   
   if (abs(nextStepsLin)>0){
@@ -16,7 +16,7 @@ void buildCurrMove(float targRot, float targLin) {
     prescalarLin = nextPrescalarLin;
     cmrLin = nextCmrLin;
     cmrLinAcc = nextCmrLinAcc;
-    currLin = nextActPos(currLin,nextStepsLin,stepsPerMM);
+    currLin = nextLinAct;
   }
   
   setDirections(nextStepsRot,nextStepsLin);
@@ -41,15 +41,4 @@ void setDirections(float nextStepsRot, float nextStepsLin) {
 static inline int8_t sgn(float val) {
   if (val < 0.0) return -1;
   return 1;
-}
-
-void printCurr() {
-  Serial.println("Curr parameters:");
-  Serial.println("stepsRot: " + String(stepsRot));
-  Serial.println("stepsLin: " + String(stepsLin));
-  Serial.println("currRot: " + String(currRot));
-  Serial.println("currLin: " + String(currLin));
-  Serial.println("rot cmr: " + String(nextCmrRot));
-  Serial.println("lin cmr: " + String(nextCmrLin));
-  Serial.println(" ");
 }

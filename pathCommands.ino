@@ -34,6 +34,12 @@ void choosePath(int pathNum) {
       currLin = 0;
       currRot = 0.0;
       break;
+    case 4:
+      //fileName = "refactor.csv";
+      fileLength = 599;
+      currLin = 170;
+      currRot = 0.0;
+      break;
     default:
       break;
   }
@@ -55,8 +61,7 @@ void startMove() {
 
 void runPattern() {
   if (i==-1) {
-    choosePath(3);
-    //myFile = SD.open(fileName);
+    choosePath(4);
     moveTimeNext = 0;
     lTargNext = 0;
     rTargNext = 0;
@@ -73,32 +78,23 @@ void runPattern() {
   }
 
   if (!builtNextMove || zeroDist) {
-    String nextTime = String(myPath[i+1][0]);
-    nextStepsLin = myPath[i+1][1];
-    nextStepsRot = myPath[i+1][2];
-    nextPrescalarLin = myPath[i+1][3];
-    nextPrescalarRot = myPath[i+1][4];
-    nextCmrLin = myPath[i+1][5];
-    nextCmrRot = myPath[i+1][6];
-    nextCmrLinAcc = myPath[i+1][7];
-    nextCmrRotAcc = myPath[i+1][8];
+    String nextTime = String(myPath3[i+1][0]);
+    nextStepsLin = myPath3[i+1][1];
+    nextStepsRot = myPath3[i+1][2];
+    nextPrescalarLin = myPath3[i+1][3];
+    nextPrescalarRot = myPath3[i+1][4];
+    nextCmrLin = myPath3[i+1][5];
+    nextCmrRot = myPath3[i+1][6];
+    nextCmrLinAcc = myPath3[i+1][7];
+    nextCmrRotAcc = myPath3[i+1][8];
+    nextLinAct = myPath3[i+1][9];
+    nextRotAct = myPath3[i+1][10];
     builtNextMove = true;
     i++;
-    //printFileReads();
   }
   
   if (i==(fileLength-2)) {
-    //myFile.close();
     i = -1;
     builtNextMove = false;
   }
-}
-
-void printFileReads() {
-  Serial.print(String(nextStepsLin) + ", ");
-  Serial.print(String(nextStepsRot) + ", ");
-  Serial.print(String(nextPrescalarLin) + ", ");
-  Serial.print(String(nextPrescalarRot) + ", ");
-  Serial.print(String(nextCmrLin) + ", ");
-  Serial.println(String(nextCmrRot));
 }
