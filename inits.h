@@ -62,8 +62,7 @@ float distPerStepLin = 1.0 / stepsPerMM;
 int rotDirPin = 13; // port PC6 PORTD // changed to 5 from 4
 int rotStepPin = 14; // port PF5 PORTD // changed to 18 from 3
 int linDirPin = 12; // port PA0 PORTD
-int linStepPin = 15; // port PB0 PORTB //changed to 4 from 9
-
+int linStepPin = 27; // port PB0 PORTB //changed from 15
 
 float myPath[1068][9] = 
 {{0.4,160,178,256,256,77,69,0.0,0.0},
