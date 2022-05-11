@@ -17,28 +17,36 @@ void moveRelative(float lPos, float rPos, float lVel, float rVel){
 void choosePath(int pathNum) {
   switch (pathNum) {
     case 1:
-      //fileName = "path.csv";
-      fileLength = 267;
-      currLin = 0.0;
-      currRot = 0.0;
+      fileLength = 599;
+      for(int i=0;i<fileLength;i++)
+        for(int j=0;j<11;j++)
+          path[i][j] = myPath3[i][j];
+      currLin = path[0][9];
+      currRot = path[0][10];
       break;
     case 2:
-      //fileName = "spirals2.csv";
-      fileLength = 449;
-      currLin = 160.0;
-      currRot = 0.0;
+      fileLength = 599;
+      for(int i=0;i<fileLength;i++)
+        for(int j=0;j<11;j++)
+          path[i][j] = myPath3[i][j];
+      currLin = path[0][9];
+      currRot = path[0][10];
       break;
     case 3:
-      //fileName = "refactor.csv";
-      fileLength = 1068;
-      currLin = 0;
-      currRot = 0.0;
+      fileLength = 599;
+      for(int i=0;i<fileLength;i++)
+        for(int j=0;j<11;j++)
+          path[i][j] = myPath3[i][j];
+      currLin = path[0][9];
+      currRot = path[0][10];
       break;
     case 4:
-      //fileName = "refactor.csv";
       fileLength = 599;
-      currLin = 170;
-      currRot = 0.0;
+      for(int i=0;i<fileLength;i++)
+        for(int j=0;j<11;j++)
+          path[i][j] = myPath3[i][j];
+      currLin = path[0][9];
+      currRot = path[0][10];
       break;
     default:
       break;
@@ -69,7 +77,7 @@ void runPattern() {
     rVelNext = 0;
   }
   
-  if ((i >= 0) && !moveRot && !moveLin) {
+  if ((i > 0) && !moveRot && !moveLin) {
     buildCurrMove(rTargNext,lTargNext);
     if (!zeroDist) {
       startMove();

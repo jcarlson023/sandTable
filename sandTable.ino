@@ -1,8 +1,7 @@
 hw_timer_t * rotTimer = NULL;
 hw_timer_t * linTimer = NULL;
 
-#include "inits.h"  
-#include "lissajousPathA.h"
+#include "inits.h"
 #include "lissajousPathB.h"
 #include "spiralsPath.h"
 
@@ -12,6 +11,11 @@ bool ranPoint = false;
 int i = -1;
                   
 void setup() {
+
+  for(int i=0;i<2000;i++)
+    for(int j=0;j<11;j++)
+        path[i][j] = 0;
+        
   Serial.begin(115200);
   Serial.setTimeout(1000);
   
