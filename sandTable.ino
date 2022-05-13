@@ -2,40 +2,48 @@ hw_timer_t * rotTimer = NULL;
 hw_timer_t * linTimer = NULL;
 
 #include "inits.h"
-#include "lissajousPathB.h"
-#include "spiralsPath.h"
 
-bool runPatt = true;
-bool moveToPoint = false;
+bool runPatt = false;
+bool moveToPoint = true;
 bool ranPoint = false;
-int i = -1;
+int pNum = 0;
+
+PathPoint currPoint = {0,0,0,0,0,0};
+PathPoint nextPoint = {0,0,0,0,0,0};
+
+void IRAM_ATTR linHomed() {
+  Serial.println("homed");
+}
                   
 void setup() {
 
   for(int i=0;i<2000;i++)
     for(int j=0;j<11;j++)
         path[i][j] = 0;
-        
+ 
   Serial.begin(115200);
   Serial.setTimeout(1000);
   
+  pinMode(linLimitPin, INPUT);
   pinMode(rotDirPin, OUTPUT);
   pinMode(linDirPin, OUTPUT);
   pinMode(rotStepPin, OUTPUT);
   pinMode(linStepPin, OUTPUT);
 
+  attachInterrupt(linLimitPin, linHomed, FALLING);
 }
 
 void loop() {
 
   if (runPatt) {
-    runPattern();
+    runPath(2);
   }
 
   if (moveToPoint && !ranPoint){
-    // linear, rotation, linear vel, rotation vel
-    moveRelative(100,180,0,0);
-    ranPoint = true;
+    moveRelative(300,0,0,0);
+    while (moveRot && moveLin){
+      Serial.println("");
+    }
   }
   
 }
