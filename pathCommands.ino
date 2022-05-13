@@ -3,6 +3,7 @@ void runPath(int _pathNum) {
   if (pNum==0) {
     choosePath(_pathNum);
     timeStep = path[1][0] - path[0][0];
+    calcNextPoint(pNum, timeStep, path[pNum][2], path[pNum][1], path[pNum][4], path[pNum][3], path[pNum][4], path[pNum][3]);
   }
   
   if ((pNum>0) && !moveRot && !moveLin) {
@@ -11,8 +12,8 @@ void runPath(int _pathNum) {
     builtNextMove = false;
   }
 
-  if (pNum>=0 && !builtNextMove) {
-    calcNextPoint(pNum, timeStep, path[pNum][2], path[pNum][1], path[pNum][4], path[pNum][3], path[pNum+1][4], path[pNum+1][3]);
+  if (pNum>=1 && !builtNextMove) {
+    calcNextPoint(pNum, timeStep, path[pNum][2], path[pNum][1], path[pNum][4], path[pNum][3], path[pNum-1][4], path[pNum-1][3]);
     builtNextMove = true;
     pNum++;
   }

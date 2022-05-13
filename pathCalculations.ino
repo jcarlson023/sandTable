@@ -1,18 +1,12 @@
 
-void calcNextPoint(float _pointNum, float _timeStep, float _rotTarg, float _linTarg, float _rotVel, float _linVel, float _nextRotVel, float _nextLinVel) {
-  float rotAcc = (_nextRotVel - _rotVel)/_timeStep;
-  float linAcc = (_nextLinVel - _linVel)/_timeStep;
-
-  float rotEndVel = _rotVel + (rotAcc * _timeStep);
-  float linEndVel = _linVel + (linAcc * _timeStep);
-
+void calcNextPoint(float _pointNum, float _timeStep, float _rotTarg, float _linTarg, float _rotVel, float _linVel, float _prevRotVel, float _prevLinVel) {
   float rotSteps = calcNumSteps(_rotTarg, currRot, stepsPerDeg);
   float linSteps = calcNumSteps(_linTarg, currLin, stepsPerMM);
 
-  float rotStartUs = calcUs(_rotVel, distPerStepRot);
-  float linStartUs = calcUs(_linVel, distPerStepLin);
-  float rotEndUs = calcUs(rotEndVel, distPerStepRot);
-  float linEndUs = calcUs(linEndVel, distPerStepLin);
+  float rotStartUs = calcUs(_prevRotVel, distPerStepRot);
+  float linStartUs = calcUs(_prevLinVel, distPerStepLin);
+  float rotEndUs = calcUs(_rotVel, distPerStepRot);
+  float linEndUs = calcUs(_linVel, distPerStepLin);
 
   float rotStartCmr = calcCmr(rotStartUs);
   float linStartCmr = calcCmr(linStartUs);
