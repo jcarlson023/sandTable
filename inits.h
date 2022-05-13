@@ -8,14 +8,16 @@ struct PathPoint {
   float linAcc;
 };
 
+PathPoint currPoint = {0,0,0,0,0,0};
+PathPoint nextPoint = {0,0,0,0,0,0};
+
 float currLin = 0;
 float currRot = 0;
 
 // file variables
-float path[2000][11];
+float path[2000][5];
 String fileName;
 int fileLength;
-
 
 // next move planning
 bool builtNextMove = false;
@@ -26,6 +28,8 @@ bool moveStartedLin;
 float timeStep;
 
 // Timing variables
+hw_timer_t * rotTimer = NULL;
+hw_timer_t * linTimer = NULL;
 const long stepLengthLimit = 200000;
 const long clockHz = 80000000;
 const long microS = 1000000;

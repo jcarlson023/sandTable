@@ -1,8 +1,8 @@
 void startMove() {
   buildInterrupts();
   setDirections(currPoint.rotSteps,currPoint.linSteps);
-  currLin = calcActPos(currLin,currPoint.linSteps,distPerStepLin);
-  currRot = calcActPos(currRot,currPoint.rotSteps,distPerStepRot);
+  //currLin = calcActPos(currLin,currPoint.linSteps,distPerStepLin);
+  //currRot = calcActPos(currRot,currPoint.rotSteps,distPerStepRot);
   resetTimerVariables();
 }
 
@@ -16,15 +16,23 @@ void resetTimerVariables() {
 }
 
 void buildInterrupts () {
-  rotTimer = timerBegin(0, (1* prescalar), true);  // Use 1st timer of 4 (counted from zero). // Set 80 divider for prescaler
+  rotTimer = timerBegin(0, (1* prescalar), true);    // Use 1st timer of 4 (counted from zero). // Set 80 divider for prescaler
   timerAttachInterrupt(rotTimer, &onRotTimer, true); // Attach onTimer function to our timer.
-  timerAlarmWrite(rotTimer, currPoint.rotCmr, true);           // Set alarm to call onTimer function every second (value in microseconds). // Repeat the alarm (third parameter)
+  timerAlarmWrite(rotTimer, currPoint.rotCmr, true); // Set alarm to call onTimer function every second (value in microseconds). // Repeat the alarm (third parameter)
   timerAlarmEnable(rotTimer);                        // Start an alarm
 
-  linTimer = timerBegin(1, (1* prescalar), true); // Use 1st timer of 4 (counted from zero). // Set 80 divider for prescaler
+  linTimer = timerBegin(1, (1* prescalar), true);    // Use 1st timer of 4 (counted from zero). // Set 80 divider for prescaler
   timerAttachInterrupt(linTimer, &onLinTimer, true); // Attach onTimer function to our timer.
-  timerAlarmWrite(linTimer, currPoint.linCmr, true);           // Set alarm to call onTimer function every second (value in microseconds). // Repeat the alarm (third parameter)
+  timerAlarmWrite(linTimer, currPoint.linCmr, true); // Set alarm to call onTimer function every second (value in microseconds). // Repeat the alarm (third parameter)
   timerAlarmEnable(linTimer);                        // Start an alarm
+}
+
+void ARDUINO_ISR_ATTR linHomed() {
+  currLin = -140;
+  currRot = 0;
+  moveLin = false;
+  moveRot = false;
+  Serial.println("homed");
 }
 
 void ARDUINO_ISR_ATTR onRotTimer(){
@@ -32,6 +40,7 @@ void ARDUINO_ISR_ATTR onRotTimer(){
     moveStartedRot = true;
     moveRot = false;
   }
+  
   if (moveRot){
     moveStartedRot = true;
     if (moveStartedLin) {
@@ -43,6 +52,7 @@ void ARDUINO_ISR_ATTR onRotTimer(){
         digitalWrite(rotStepPin, LOW);
         stepPulseRot = true;
         stepCountRot = stepCountRot + 1;
+        currRot = currRot + (distPerStepRot*sgn(currPoint.rotSteps));
         currPoint.rotCmr = calcAccCmr(currPoint.rotCmr,currPoint.rotAcc);
         timerAlarmWrite(rotTimer, currPoint.rotCmr, true);
       }  
@@ -55,6 +65,7 @@ void ARDUINO_ISR_ATTR onLinTimer(){
     moveStartedLin = true;
     moveLin = false;
   }
+  
   if (moveLin) {
     moveStartedLin = true;
     if (moveStartedRot) {
@@ -66,6 +77,7 @@ void ARDUINO_ISR_ATTR onLinTimer(){
         digitalWrite(linStepPin, LOW);
         stepPulseLin = true;
         stepCountLin = stepCountLin + 1;
+        currLin = currLin + (distPerStepLin*sgn(currPoint.linSteps));
         currPoint.linCmr = calcAccCmr(currPoint.linCmr,currPoint.linAcc);
         timerAlarmWrite(linTimer, currPoint.linCmr, true);
       }

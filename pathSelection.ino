@@ -1,18 +1,14 @@
 void choosePath(int pathNum) {
+  for(int i=0;i<2000;i++)
+    for(int j=0;j<5;j++)
+        path[i][j] = 0;
+        
   switch (pathNum) {
-    case 1:  // Spirals
-      fileLength = 599;
+    case 1:  // Lissajous
+      fileLength = 535;
       for(int i=0;i<fileLength;i++)
-        for(int j=0;j<11;j++)
-          path[i][j] = 0;// myPath3[i][j];
-      currLin = path[0][9];
-      currRot = path[0][10];
-      break;
-    case 2:  // Spirals
-      fileLength = 1067;
-      for(int i=0;i<fileLength;i++)
-        for(int j=0;j<11;j++)
-          path[i][j] =0;// myPath4[i][j];
+        for(int j=0;j<5;j++)
+          path[i][j] = lissajousA[i][j];
       currLin = path[0][9];
       currRot = path[0][10];
       break;
