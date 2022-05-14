@@ -1,7 +1,9 @@
 #include "inits.h"
 #include "z_lissajousA.h"
 #include "z_spiralsA.h"
+#include "z_spiralsB.h"
 #include "z_straightTest.h"
+#include "z_lissajousSlow.h"
 
 bool runPatt = true;
 bool moveToPoint = false;
@@ -46,23 +48,18 @@ void setup() {
 
 void loop() {
   
-  homingRoutine();
+  if (!isHomed) {
+    homingRoutine();
+  }
 
   if (runPatt && isHomed) {
-    runPath(3,true);
+    runPath(5,false);
   }
 
   if (moveToPoint && isHomed){
-    if (manPointNum==1 && !moveLin && !moveRot) {
-      moveRelative(0,0,0.06,0.06);
-      manPointNum++;
-    }
-    if (manPointNum==2 && !moveLin && !moveRot) {
-      moveRelative(0,720,0.04,200);
-      manPointNum++;
-    }
+    runMoveTo();
   }
-
+  
   if (moveLin || moveRot) {
     runInterrupts();
   }

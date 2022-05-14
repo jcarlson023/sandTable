@@ -32,11 +32,24 @@ void runPath(int _pathNum, bool offsetPattern) {
   }
    
   if (pNum==fileLength && pNumCompleted==(fileLength)) {
-    Serial.println("here");
     pNum = 0;
     if (offsetPattern){
       currOffset = currOffset + offsetAngle;
+      if (currOffset>=360){
+        currOffset=0;
+      }
     }
+  }
+}
+
+void runMoveTo() {
+  if (manPointNum==1 && !moveLin && !moveRot) {
+    moveRelative(0,0,0.06,0.06);
+    manPointNum++;
+  }
+  if (manPointNum==2 && !moveLin && !moveRot) {
+    moveRelative(0,720,0.04,200);
+    manPointNum++;
   }
 }
 

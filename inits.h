@@ -24,7 +24,7 @@ int pNumCompleted = 0;
 // file variables
 float path[2000][5];
 String fileName;
-int fileLength;
+long fileLength;
 int offsetAngle = 0;
 
 // next move planning
@@ -39,7 +39,7 @@ float timeStep;
 const long clockHz = 80000000;
 const long microS = 1000000;
 const long prescalar = 256;
-const long stepLengthLimit = 6000;
+const long stepLengthLimit = 15000;
 const long cmrLimit = round(clockHz/(prescalar*(microS / stepLengthLimit)))-1;
 bool stepPulseRot = true;
 bool stepPulseLin = true;
