@@ -5,10 +5,25 @@ void choosePath(int pathNum) {
         
   switch (pathNum) {
     case 1:  // Lissajous
-      fileLength = 535;
+      fileLength = 880;
+      offsetAngle = 20;
       for(int i=0;i<fileLength;i++)
         for(int j=0;j<5;j++)
           path[i][j] = lissajousA[i][j];
+      break;
+    case 2:  // SpiralsA
+      fileLength = 900;
+      offsetAngle = 20;
+      for(int i=0;i<fileLength;i++)
+        for(int j=0;j<5;j++)
+          path[i][j] = spiralsA[i][j];
+      break;
+    case 3:  // straight
+      fileLength = 3;
+      offsetAngle = 20;
+      for(int i=0;i<fileLength;i++)
+        for(int j=0;j<5;j++)
+          path[i][j] = straight[i][j];
       break;
     default:
       break;

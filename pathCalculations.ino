@@ -1,22 +1,25 @@
-
 void calcNextPoint(float _pointNum, float _timeStep, float _rotTarg, float _linTarg, float _rotVel, float _linVel, float _prevRotVel, float _prevLinVel) {
-  float rotSteps = calcNumSteps(_rotTarg, currRot, stepsPerDeg);
-  float linSteps = calcNumSteps(_linTarg, currLin, stepsPerMM);
+  _linTarg = _linTarg * 1000.0;
+  _linVel = _linVel * 1000.0;
+  _prevLinVel = _prevLinVel * 1000.0;
+  
+  float _rotSteps = calcNumSteps(_rotTarg, currRot, stepsPerDeg);
+  float _linSteps = calcNumSteps(_linTarg, currLin, stepsPerMM);
 
-  float rotStartUs = calcUs(_prevRotVel, distPerStepRot);
-  float linStartUs = calcUs(_prevLinVel, distPerStepLin);
-  float rotEndUs = calcUs(_rotVel, distPerStepRot);
-  float linEndUs = calcUs(_linVel, distPerStepLin);
+  float _rotStartUs = calcUs(_prevRotVel, distPerStepRot);
+  float _linStartUs = calcUs(_prevLinVel, distPerStepLin);
+  float _rotEndUs = calcUs(_rotVel, distPerStepRot);
+  float _linEndUs = calcUs(_linVel, distPerStepLin);
 
-  float rotStartCmr = calcCmr(rotStartUs);
-  float linStartCmr = calcCmr(linStartUs);
-  float rotEndCmr = calcCmr(rotEndUs);
-  float linEndCmr = calcCmr(linEndUs);
+  float _rotStartCmr = calcCmr(_rotStartUs);
+  float _linStartCmr = calcCmr(_linStartUs);
+  float _rotEndCmr = calcCmr(_rotEndUs);
+  float _linEndCmr = calcCmr(_linEndUs);
 
-  float rotCmrAcc = (rotStartCmr - rotEndCmr) / _timeStep;
-  float linCmrAcc = (linStartCmr - linEndCmr) / _timeStep;
+  float _rotCmrAcc = (_rotStartCmr - _rotEndCmr) / _timeStep;
+  float _linCmrAcc = (_linStartCmr - _linEndCmr) / _timeStep;
 
-  nextPoint = {rotSteps,linSteps,rotStartCmr,linStartCmr,rotCmrAcc,linCmrAcc};
+  nextPoint = {_rotSteps,_linSteps,_rotStartCmr,_linStartCmr,_rotCmrAcc,_linCmrAcc};
 }
 
 float calcNumSteps(float _targ, float _curr, float _stepsPer) {
@@ -30,12 +33,20 @@ float calcActPos(float _targ, float _curr, float _numSteps, float _distPer) {
 }
 
 float calcUs(float _vel, float _distPer) {
-  if (_vel==0) {return stepLengthLimit;}
-  else {return round((_distPer/(abs(_vel)/microS))/2);}
+  if (_vel==0) {
+    return stepLengthLimit;}
+  else {
+    float _calcUs = round((_distPer/(abs(_vel)/microS))/2);
+    if (_calcUs>=stepLengthLimit){
+      return stepLengthLimit;
+    } else {
+      return _calcUs;
+    }
+  }
 }
 
 float calcCmr(float _usStep) {
-  long stepHz = microS / _usStep;
+  float stepHz = microS / _usStep;
   return round(clockHz/(prescalar*stepHz))-1;
 }
 

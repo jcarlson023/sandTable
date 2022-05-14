@@ -1,10 +1,3 @@
-void startMove() {
-  buildInterrupts();
-  setDirections(currPoint.rotSteps,currPoint.linSteps);
-  //currLin = calcActPos(currLin,currPoint.linSteps,distPerStepLin);
-  //currRot = calcActPos(currRot,currPoint.rotSteps,distPerStepRot);
-  resetTimerVariables();
-}
 
 void resetTimerVariables() {
   stepCountRot = 0;
@@ -15,27 +8,7 @@ void resetTimerVariables() {
   moveLin = true;
 }
 
-void buildInterrupts () {
-  rotTimer = timerBegin(0, (1* prescalar), true);    // Use 1st timer of 4 (counted from zero). // Set 80 divider for prescaler
-  timerAttachInterrupt(rotTimer, &onRotTimer, true); // Attach onTimer function to our timer.
-  timerAlarmWrite(rotTimer, currPoint.rotCmr, true); // Set alarm to call onTimer function every second (value in microseconds). // Repeat the alarm (third parameter)
-  timerAlarmEnable(rotTimer);                        // Start an alarm
-
-  linTimer = timerBegin(1, (1* prescalar), true);    // Use 1st timer of 4 (counted from zero). // Set 80 divider for prescaler
-  timerAttachInterrupt(linTimer, &onLinTimer, true); // Attach onTimer function to our timer.
-  timerAlarmWrite(linTimer, currPoint.linCmr, true); // Set alarm to call onTimer function every second (value in microseconds). // Repeat the alarm (third parameter)
-  timerAlarmEnable(linTimer);                        // Start an alarm
-}
-
-void ARDUINO_ISR_ATTR linHomed() {
-  currLin = -140;
-  currRot = 0;
-  moveLin = false;
-  moveRot = false;
-  Serial.println("homed");
-}
-
-void ARDUINO_ISR_ATTR onRotTimer(){
+void runRotStep() {
   if (stepCountRot>=abs(currPoint.rotSteps)){
     moveStartedRot = true;
     moveRot = false;
@@ -52,7 +25,7 @@ void ARDUINO_ISR_ATTR onRotTimer(){
         digitalWrite(rotStepPin, LOW);
         stepPulseRot = true;
         stepCountRot = stepCountRot + 1;
-        currRot = currRot + (distPerStepRot*sgn(currPoint.rotSteps));
+        //currRot = currRot + (distPerStepRot*sgn(currPoint.rotSteps));
         currPoint.rotCmr = calcAccCmr(currPoint.rotCmr,currPoint.rotAcc);
         timerAlarmWrite(rotTimer, currPoint.rotCmr, true);
       }  
@@ -60,7 +33,7 @@ void ARDUINO_ISR_ATTR onRotTimer(){
   }
 }
 
-void ARDUINO_ISR_ATTR onLinTimer(){
+void runLinStep() {
   if (stepCountLin>=abs(currPoint.linSteps)){
     moveStartedLin = true;
     moveLin = false;
@@ -77,17 +50,47 @@ void ARDUINO_ISR_ATTR onLinTimer(){
         digitalWrite(linStepPin, LOW);
         stepPulseLin = true;
         stepCountLin = stepCountLin + 1;
-        currLin = currLin + (distPerStepLin*sgn(currPoint.linSteps));
+        //currLin = currLin + (distPerStepLin*sgn(currPoint.linSteps));
         currPoint.linCmr = calcAccCmr(currPoint.linCmr,currPoint.linAcc);
         timerAlarmWrite(linTimer, currPoint.linCmr, true);
       }
     }
-  }  
+  }
 }
 
 long calcAccCmr(long _cmr, long _cmrAcc) {
   _cmr = _cmr + _cmrAcc*(((_cmr*2)*prescalar)/clockHz);
-  if (_cmr>500000) {_cmr=500000;}
+  if (_cmr>cmrLimit) {_cmr=cmrLimit;}
   if (_cmr<10) {_cmr=10;}
   return _cmr;
+}
+
+void runInterrupts() {
+  if (rotInterruptCounter>0){
+    portENTER_CRITICAL(&rotTimerMux);
+    rotInterruptCounter--;
+    portEXIT_CRITICAL(&rotTimerMux);
+    runRotStep();
+  }
+
+  if (linInterruptCounter>0){
+    portENTER_CRITICAL(&linTimerMux);
+    linInterruptCounter--;
+    portEXIT_CRITICAL(&linTimerMux);
+    runLinStep();
+  }
+}
+
+void buildInterrupts() {
+  rotTimer = timerBegin(0, 256, true);       // Use 1st timer of 4 (counted from zero). // Set 80 divider for prescaler
+  timerAttachInterrupt(rotTimer, &onRotTimer, true); // Attach onTimer function to our timer.
+  //timerAlarmWrite(rotTimer, int(currPoint.rotCmr), true); // Set alarm to call onTimer function every second (value in microseconds). // Repeat the alarm (third parameter)
+  timerAlarmWrite(rotTimer, 1000, true);
+  timerAlarmEnable(rotTimer);                        // Start an alarm
+
+  linTimer = timerBegin(1, 256, true);       // Use 1st timer of 4 (counted from zero). // Set 80 divider for prescaler
+  timerAttachInterrupt(linTimer, &onLinTimer, true); // Attach onTimer function to our timer.
+  //timerAlarmWrite(linTimer, int(currPoint.linCmr), true); // Set alarm to call onTimer function every second (value in microseconds). // Repeat the alarm (third parameter)
+  timerAlarmWrite(linTimer, 1000, true);
+  timerAlarmEnable(linTimer);                        // Start an alarm
 }
