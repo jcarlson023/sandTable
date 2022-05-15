@@ -25,7 +25,6 @@ void runRotStep() {
         digitalWrite(rotStepPin, LOW);
         stepPulseRot = true;
         stepCountRot = stepCountRot + 1;
-        //currRot = currRot + (distPerStepRot*sgn(currPoint.rotSteps));
         currPoint.rotCmr = calcAccCmr(currPoint.rotCmr,currPoint.rotAcc);
         timerAlarmWrite(rotTimer, currPoint.rotCmr, true);
       }  
@@ -50,7 +49,6 @@ void runLinStep() {
         digitalWrite(linStepPin, LOW);
         stepPulseLin = true;
         stepCountLin = stepCountLin + 1;
-        //currLin = currLin + (distPerStepLin*sgn(currPoint.linSteps));
         currPoint.linCmr = calcAccCmr(currPoint.linCmr,currPoint.linAcc);
         timerAlarmWrite(linTimer, currPoint.linCmr, true);
       }
@@ -82,15 +80,13 @@ void runInterrupts() {
 }
 
 void buildInterrupts() {
-  rotTimer = timerBegin(0, 256, true);       // Use 1st timer of 4 (counted from zero). // Set 80 divider for prescaler
-  timerAttachInterrupt(rotTimer, &onRotTimer, true); // Attach onTimer function to our timer.
-  //timerAlarmWrite(rotTimer, int(currPoint.rotCmr), true); // Set alarm to call onTimer function every second (value in microseconds). // Repeat the alarm (third parameter)
+  rotTimer = timerBegin(0, 256, true);                        // Use 1st timer of 4 (counted from zero). // Set 80 divider for prescaler
+  timerAttachInterrupt(rotTimer, &onRotTimer, true);          // Attach onTimer function to our timer.
   timerAlarmWrite(rotTimer, 1000, true);
-  timerAlarmEnable(rotTimer);                        // Start an alarm
+  timerAlarmEnable(rotTimer);                                 // Start an alarm
 
-  linTimer = timerBegin(1, 256, true);       // Use 1st timer of 4 (counted from zero). // Set 80 divider for prescaler
-  timerAttachInterrupt(linTimer, &onLinTimer, true); // Attach onTimer function to our timer.
-  //timerAlarmWrite(linTimer, int(currPoint.linCmr), true); // Set alarm to call onTimer function every second (value in microseconds). // Repeat the alarm (third parameter)
+  linTimer = timerBegin(1, 256, true);                        // Use 1st timer of 4 (counted from zero). // Set 80 divider for prescaler
+  timerAttachInterrupt(linTimer, &onLinTimer, true);          // Attach onTimer function to our timer.
   timerAlarmWrite(linTimer, 1000, true);
-  timerAlarmEnable(linTimer);                        // Start an alarm
+  timerAlarmEnable(linTimer);                                 // Start an alarm
 }

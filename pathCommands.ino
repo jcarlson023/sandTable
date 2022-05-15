@@ -1,12 +1,3 @@
-void startMove() {
-  timerAlarmWrite(rotTimer, currPoint.rotCmr, true);
-  timerAlarmWrite(rotTimer, currPoint.linCmr, true);
-  setDirections(currPoint.rotSteps,currPoint.linSteps);
-  currLin = calcActPos(currLin,currPoint.linSteps,distPerStepLin);
-  currRot = calcActPos(currRot,currPoint.rotSteps,distPerStepRot);
-  resetTimerVariables();
-}
-
 void runPath(int _pathNum, bool offsetPattern) {
 
   if (pNum==0 && !moveRot && !moveLin) {
@@ -40,6 +31,15 @@ void runPath(int _pathNum, bool offsetPattern) {
       }
     }
   }
+}
+
+void startMove() {
+  timerAlarmWrite(rotTimer, currPoint.rotCmr, true);
+  timerAlarmWrite(linTimer, currPoint.linCmr, true);
+  setDirections(currPoint.rotSteps,currPoint.linSteps);
+  currLin = calcActPos(currLin,currPoint.linSteps,distPerStepLin);
+  currRot = calcActPos(currRot,currPoint.rotSteps,distPerStepRot);
+  resetTimerVariables();
 }
 
 void runMoveTo() {

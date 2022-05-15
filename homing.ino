@@ -1,5 +1,8 @@
 
 void homingRoutine() {
+  if (homedFlag){
+    setHome();
+  }
   if (!isHomed && !homingStarted && !moveLin && !moveRot) {
     moveRelative(-0.01,0,0.03,0.03);
     homingStarted = true;

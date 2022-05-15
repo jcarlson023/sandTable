@@ -1,6 +1,5 @@
 #include "inits.h"
 #include "z_lissajousA.h"
-#include "z_spiralsA.h"
 #include "z_spiralsB.h"
 #include "z_straightTest.h"
 #include "z_lissajousSlow.h"
@@ -29,7 +28,7 @@ void IRAM_ATTR onLinTimer(){
 
 void IRAM_ATTR linHomed() {
   if (!isHomed){
-    setHome();
+    homedFlag = true;
   }
 }
               
@@ -53,7 +52,7 @@ void loop() {
   }
 
   if (runPatt && isHomed) {
-    runPath(5,false);
+    runPath(4,false);
   }
 
   if (moveToPoint && isHomed){

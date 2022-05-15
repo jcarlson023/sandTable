@@ -15,6 +15,7 @@ float currLin = 0;
 float currRot = 0;
 float currOffset = 0;
 bool isHomed = false;
+bool homedFlag = false;
 bool homingStarted = false;
 
 int manPointNum = 1;
